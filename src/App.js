@@ -1,25 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
 
-function App() {
+export default function App() {
+  const [gifs, setGifs] = useState([{}]);
+  const handleClick = async () => {
+    try {
+      const response = await fetch(
+        "https://api.giphy.com/v1/gifs/search?q=shaq&api_key=Du3xTBd5SS58qmw6FL2Dv4EFJmAh1LcW&limit=10"
+      );
+      const data = await response.json();
+      const gifs = data.data;
+      console.log("data", data)
+      console.log(gifs);
+      console.log(gifs.images)
+      setGifs(gifs);
+    } catch (err) {
+      console.log(err.response);
+    }
+  };
+  const gifList = gifs.map(gif => <img className="gif" src={gif.images.original.url}/>);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <button onClick={handleClick}>Get Gifs</button>
+      {gifList}
     </div>
   );
 }
-
-export default App;
